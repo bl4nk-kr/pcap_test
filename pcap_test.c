@@ -30,5 +30,5 @@ void p_data(u_char *str, int len) {
 		if(0x1f < *(str+i) && *(str+i) < 0x7f) printf("%c", *(str+i));
 		else printf(".");
 	}
-	printf("\n\n");
+	printf("\n");
 }

@@ -34,15 +34,6 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Couldn't open device %s: %s\n", dev, errbuf);
 		return(2);
 	}
-		/* Compile and apply the filter */
-/*	if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1) {
-		fprintf(stderr, "Couldn't parse filter %s: %s\n", filter_exp, pcap_geterr(handle));
-		return(2);
-	}
-	if (pcap_setfilter(handle, &fp) == -1) {
-		fprintf(stderr, "Couldn't install filter %s: %s\n", filter_exp, pcap_geterr(handle));
-		return(2);
-	}*/
 	while (1) {	/* Grab a packet */
 		pcap_next_ex(handle, &header, &packet);
 		eptr = (struct eptr_header *) packet;
@@ -54,7 +45,7 @@ int main(int argc, char *argv[])
 		p_colon(eptr->ether_shost);
 		printf("eth.dmac : ");
 		p_colon(eptr->ether_dhost);
-		if(eptr->ether_type == IPTYPE) {	/* filter packets with IPv4, TCP trotocol */
+		if(eptr->ether_type == IPTYPE) {
 			iptr = (struct ip *) (packet + 14);
 			printf("ip protocol : %d\n", iptr->ip_p);
 			printf("ip.sip : %s\n", inet_ntoa(iptr->ip_src));
@@ -68,6 +59,7 @@ int main(int argc, char *argv[])
 				p_data(dptr, ntohs(iptr->ip_len) - iptr->ip_hl * 4 - tptr->th_off * 4);
 			}
 		}
+		printf("\n");
 	}		/* And close the session */
 	pcap_close(handle);
 	return(0);
